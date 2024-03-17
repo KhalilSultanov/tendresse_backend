@@ -1,4 +1,4 @@
-## AviaToShop Backend
+## TENDRESSE Backend
 
 Backend для интернет-магазина TENDRESEE (еще в разработке).
 
