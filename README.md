@@ -1,4 +1,4 @@
-## AviaToShop Backend
+## TENDRESSE Backend
 
 Backend для интернет-магазина TENDRESEE (еще в разработке).
 
@@ -29,7 +29,7 @@ Backend для интернет-магазина TENDRESEE (еще в разра
 
 Выполните миграции для создания базы данных:
 
-<code>python manage.py makemigrations/code>
+<code>python manage.py makemigrations</code>
 
 <code>python manage.py migrate</code>
 

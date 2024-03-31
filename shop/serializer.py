@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Photo, Category, Color, Size, Review, Characteristic
+from .models import Product, Photo, Category, Review, Characteristic, ContactForm, Manufacturer
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -12,6 +12,12 @@ class CharacteristicSerializer(serializers.ModelSerializer):
         model = Characteristic
         fields = ['name', 'value']
 
+class ManufacturerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Manufacturer
+        fields = ['name']
+
+
 class ProductSerializer(serializers.ModelSerializer):
     photos = serializers.SerializerMethodField()
     categories = serializers.SerializerMethodField()
@@ -19,25 +25,56 @@ class ProductSerializer(serializers.ModelSerializer):
     sizes = serializers.SerializerMethodField()
     reviews = serializers.SerializerMethodField()
     characteristics = serializers.SerializerMethodField()
+    manufacturer = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Product
         fields = '__all__'
 
-    def get_photos(self, obj):
+    @staticmethod
+    def get_photos(obj):
         return [photo.image.url for photo in obj.photos.all()]
 
-    def get_categories(self, obj):
+    @staticmethod
+    def get_categories(obj):
         return [category.name for category in obj.categories.all()]
 
-    def get_colors(self, obj):
+    @staticmethod
+    def get_colors(obj):
         return [color.name for color in obj.colors.all()]
 
-    def get_sizes(self, obj):
+    @staticmethod
+    def get_sizes(obj):
         return [size.name for size in obj.sizes.all()]
 
-    def get_reviews(self, obj):
+    @staticmethod
+    def get_reviews(obj):
         return ReviewSerializer(obj.reviews.all(), many=True).data
 
-    def get_characteristics(self, obj):
+    @staticmethod
+    def get_characteristics(obj):
         return CharacteristicSerializer(obj.characteristics.all(), many=True).data
+
+    @staticmethod
+    def get_manufacturer(obj):
+        manufacturer_instance = obj.manufacturer.first()
+        if manufacturer_instance:
+            return manufacturer_instance.name
+        return None
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+class PhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Photo
+        fields = '__all__'
+
+class ContactFormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactForm
+        fields = '__all__'
+

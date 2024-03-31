@@ -57,7 +57,7 @@ class Review(models.Model):
         return f"{self.name} - {self.text[:50]}"
 
 class Photo(models.Model):
-    image = models.ImageField(upload_to='product_photos')
+    image = models.ImageField(upload_to='static')
 
     def __str__(self):
         return self.image.name
@@ -67,3 +67,9 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+class ContactForm(models.Model):
+    fullname = models.CharField(max_length=1000)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    email = models.EmailField(max_length=1000, blank=True, null=True)
+    message = models.CharField(max_length=2000)

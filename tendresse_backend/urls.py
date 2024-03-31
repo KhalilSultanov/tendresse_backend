@@ -17,9 +17,17 @@ Including another URLconf
 from django.urls import path
 from django.contrib import admin
 
-from shop.views import search_products
+from shop.views import search_products, all_products, product_by_id, all_categories, product_photos, contact_form_view, \
+    ProductList
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/search/', search_products, name='search'),
+    path('api/all_products/', all_products, name='all_products'),
+    path('api/product_by_id/<int:id>/', product_by_id, name='product_by_id'),
+    path('api/all_categories/', all_categories, name='all_categories'),
+    path('api/product/<int:product_id>/photos/', product_photos, name='product_photos'),
+    path('api/submit_contact_form/', contact_form_view, name='contact_form_view'),
+    path('api/products/', ProductList.as_view(), name='product-list'),
 ]
+
