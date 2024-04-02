@@ -1,3 +1,5 @@
+import os
+
 from django.db.models import Q
 from rest_framework import generics
 from rest_framework.decorators import api_view
@@ -5,7 +7,7 @@ from rest_framework.response import Response
 
 from .filter import ProductFilter
 from .models import Product, Category, Blog
-from .serializer import ProductSerializer, CategorySerializer, MainPhotoSerializer, ContactFormSerializer, BlogSerializer, SecondaryPhotoSerializer
+from .serializer import ProductSerializer, CategorySerializer, MainPhotoSerializer, ContactFormSerializer, BlogSerializer, SecondaryPhotoSerializer, MainPhotoBlogSerializer, SecondaryPhotoBlogSerializer
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -65,11 +67,15 @@ def product_photos(request, product_id):
     main_photos = product.main_photo.all()
     secondary_photos = product.secondary_photo.all()
 
-    main_serializer = MainPhotoSerializer(main_photos, many=True, context={'product_id': product_id, 'request': request})
-    secondary_serializer = SecondaryPhotoSerializer(secondary_photos, many=True, context={'product_id': product_id, 'request': request})
+    main_photo_data = [{'id': photo.id, 'image': os.path.basename(photo.image.url)} for photo in main_photos]
+    secondary_photo_data = [{'id': photo.id, 'image': os.path.basename(photo.image.url)} for photo in secondary_photos]
 
-    return Response({'main_photos': main_serializer.data, 'secondary_photos': secondary_serializer.data})
+    response_data = {
+        'main_photo': main_photo_data,
+        'secondary_photos': secondary_photo_data
+    }
 
+    return Response(response_data)
 @csrf_exempt
 def contact_form_view(request):
     print(request.body)
@@ -119,3 +125,18 @@ def get_blogs(request):
     blogs = Blog.objects.all()
     serializer = BlogSerializer(blogs, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def blog_photos(request, blog_id):
+    try:
+        blog = Blog.objects.get(pk=blog_id)
+    except Blog.DoesNotExist:
+        return Response({'message': 'Блог не найден'}, status=404)
+
+    main_photo = blog.main_photo.all()
+    secondary_photos = blog.secondary_photo.all()
+
+    main_serializer = MainPhotoBlogSerializer(main_photo, many=True, context={'request': request})
+    secondary_serializer = SecondaryPhotoBlogSerializer(secondary_photos, many=True, context={'request': request})
+
+    return Response({'main_photo': main_serializer.data, 'secondary_photos': secondary_serializer.data})

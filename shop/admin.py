@@ -1,11 +1,17 @@
 from django.contrib import admin
-from .models import Product, Manufacturer, Color, Size, Characteristic, Review, MainPhoto, Category, ContactForm, Blog, SecondaryPhoto
+from .models import Product, Manufacturer, Color, Size, Characteristic, Review, MainPhoto, Category, ContactForm, Blog, \
+    SecondaryPhoto, BlogCharacteristic, MainBlogPhoto, SecondaryBlogPhoto
 from decimal import Decimal
 
 
 class CharacteristicInline(admin.TabularInline):
     model = Characteristic
     extra = 1
+
+class BlogCharacteristicInline(admin.TabularInline):
+    model = BlogCharacteristic
+    extra = 1
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -52,7 +58,7 @@ class MainPhotoAdmin(admin.ModelAdmin):
     search_fields = ('image',)
 
 @admin.register(SecondaryPhoto)
-class PhotoAdmin(admin.ModelAdmin):
+class SecondaryPhotoAdmin(admin.ModelAdmin):
     list_display = ('id', 'image',)
     search_fields = ('image',)
 
@@ -68,5 +74,23 @@ class ContactFormAdmin(admin.ModelAdmin):
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description')
-    search_fields = ('name', 'description')
+    list_display = ('id', 'name', 'description', 'created_at_display')
+    search_fields = ('name', 'description', 'created_at')
+    filter_horizontal = ('main_photo', 'secondary_photo')
+
+    inlines = [BlogCharacteristicInline]
+
+    @staticmethod
+    def created_at_display(obj):
+        return obj.created_at.strftime('%d.%m.%Y')
+
+@admin.register(SecondaryBlogPhoto)
+class SecondaryBlogPhotoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'image',)
+    search_fields = ('image',)
+
+@admin.register(MainBlogPhoto)
+class MainBlogPhotoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'image',)
+    search_fields = ('image',)
+

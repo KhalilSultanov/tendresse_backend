@@ -58,7 +58,7 @@ class Review(models.Model):
         return f"{self.name} - {self.text[:50]}"
 
 class MainPhoto(models.Model):
-    image = models.ImageField(upload_to='static/products_photos/main_photos', blank=True, null=True)
+    image = models.ImageField(upload_to='static/products_photos/main_photo', blank=True, null=True)
 
     def __str__(self):
         return self.image.name
@@ -81,7 +81,33 @@ class ContactForm(models.Model):
     email = models.EmailField(max_length=1000, blank=True, null=True)
     message = models.CharField(max_length=2000)
 
+
+class MainBlogPhoto(models.Model):
+    image = models.ImageField(upload_to='static/blog_photos/main_photo/', blank=True, null=True)
+
+    def __str__(self):
+        return self.image.name
+
+class SecondaryBlogPhoto(models.Model):
+    image = models.ImageField(upload_to='static/blog_photos/secondary_photos/', blank=True, null=True)
+
+    def __str__(self):
+        return self.image.name
+
+
 class Blog(models.Model):
     name = models.CharField(max_length=1000)
     description = models.TextField(max_length=10000)
-    photo = models.ImageField(upload_to='static/blog_photos')
+    main_photo = models.ManyToManyField('MainBlogPhoto', blank=True)
+    secondary_photo = models.ManyToManyField('SecondaryBlogPhoto', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+class BlogCharacteristic(models.Model):
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='characteristics')
+    name = models.CharField(max_length=255)
+    value = models.TextField()
+
+    def __str__(self):
+        return f"{self.name}: {self.value}"
+
+

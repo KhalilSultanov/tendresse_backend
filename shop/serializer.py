@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import Product, MainPhoto, Category, Review, Characteristic, ContactForm, Manufacturer, Blog, SecondaryPhoto
+from .models import (Product, MainPhoto, Category, Review, Characteristic, ContactForm, Manufacturer, Blog,
+                     SecondaryPhoto,
+                     MainBlogPhoto, SecondaryBlogPhoto, BlogCharacteristic)
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -88,10 +90,57 @@ class ContactFormSerializer(serializers.ModelSerializer):
         model = ContactForm
         fields = '__all__'
 
+    @staticmethod
+    def get_characteristics(obj):
+        return BlogCharacteristicSerializer(obj.characteristics.all(), many=True).data
+
+class BlogCharacteristicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogCharacteristic
+        fields = ['name', 'value']
+
+class MainPhotoBlogSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = MainBlogPhoto
+        fields = ['image']
+
+    @staticmethod
+    def get_image(obj):
+        return obj.image.url if obj.image else None
+
+class SecondaryPhotoBlogSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SecondaryBlogPhoto
+        fields = ['image']
+
+    @staticmethod
+    def get_image(obj):
+        return obj.image.url if obj.image else None
+
 class BlogSerializer(serializers.ModelSerializer):
+    main_photo = serializers.SerializerMethodField()
+    secondary_photo = serializers.SerializerMethodField()
+
     class Meta:
         model = Blog
-        fields = '__all__'
+        fields = ['id', 'created_at', 'characteristics', 'name', 'description', 'main_photo', 'secondary_photo']
 
+    @staticmethod
+    def get_main_photo(obj):
+        return [photo.image.url for photo in obj.main_photo.all()]
+
+    @staticmethod
+    def get_secondary_photo(obj):
+        return [photo.image.url for photo in obj.secondary_photo.all()]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        characteristics = BlogCharacteristic.objects.filter(blog_id=instance.id).values('name', 'value')
+        data['characteristics'] = list(characteristics)
+        return data
 
 
