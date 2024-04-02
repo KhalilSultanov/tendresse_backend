@@ -18,7 +18,7 @@ from django.urls import path
 from django.contrib import admin
 
 from shop.views import search_products, all_products, product_by_id, all_categories, product_photos, contact_form_view, \
-    ProductList
+    ProductList, get_blogs
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +29,6 @@ urlpatterns = [
     path('api/product/<int:product_id>/photos/', product_photos, name='product_photos'),
     path('api/submit_contact_form/', contact_form_view, name='contact_form_view'),
     path('api/products/', ProductList.as_view(), name='product-list'),
+    path('api/blog', get_blogs, name='get_blogs'),
 ]
 

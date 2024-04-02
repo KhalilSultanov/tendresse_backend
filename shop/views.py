@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .filter import ProductFilter
-from .models import Product, Category
-from .serializer import ProductSerializer, CategorySerializer, PhotoSerializer, ContactFormSerializer
+from .models import Product, Category, Blog
+from .serializer import ProductSerializer, CategorySerializer, MainPhotoSerializer, ContactFormSerializer, BlogSerializer, SecondaryPhotoSerializer
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -62,9 +62,13 @@ def product_photos(request, product_id):
     except Product.DoesNotExist:
         return Response({'message': 'Товар не найден'}, status=404)
 
-    photos = product.photos.all()
-    serializer = PhotoSerializer(photos, many=True, context={'product_id': product_id, 'request': request})
-    return Response(serializer.data)
+    main_photos = product.main_photo.all()
+    secondary_photos = product.secondary_photo.all()
+
+    main_serializer = MainPhotoSerializer(main_photos, many=True, context={'product_id': product_id, 'request': request})
+    secondary_serializer = SecondaryPhotoSerializer(secondary_photos, many=True, context={'product_id': product_id, 'request': request})
+
+    return Response({'main_photos': main_serializer.data, 'secondary_photos': secondary_serializer.data})
 
 @csrf_exempt
 def contact_form_view(request):
@@ -108,3 +112,10 @@ class ProductList(generics.ListAPIView):
             queryset = queryset.filter(sizes__id=size_id)
 
         return queryset
+
+
+@api_view(['GET'])
+def get_blogs(request):
+    blogs = Blog.objects.all()
+    serializer = BlogSerializer(blogs, many=True)
+    return Response(serializer.data)

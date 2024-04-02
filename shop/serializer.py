@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Photo, Category, Review, Characteristic, ContactForm, Manufacturer
+from .models import Product, MainPhoto, Category, Review, Characteristic, ContactForm, Manufacturer, Blog, SecondaryPhoto
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -19,7 +19,8 @@ class ManufacturerSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    photos = serializers.SerializerMethodField()
+    main_photo = serializers.SerializerMethodField()
+    secondary_photo = serializers.SerializerMethodField()
     categories = serializers.SerializerMethodField()
     colors = serializers.SerializerMethodField()
     sizes = serializers.SerializerMethodField()
@@ -33,8 +34,12 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     @staticmethod
-    def get_photos(obj):
-        return [photo.image.url for photo in obj.photos.all()]
+    def get_main_photo(obj):
+        return [photo.image.url for photo in obj.main_photo.all()]
+
+    @staticmethod
+    def get_secondary_photo(obj):
+        return [photo.image.url for photo in obj.secondary_photo.all()]
 
     @staticmethod
     def get_categories(obj):
@@ -68,13 +73,25 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
-class PhotoSerializer(serializers.ModelSerializer):
+class MainPhotoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Photo
+        model = MainPhoto
+        fields = '__all__'
+
+class SecondaryPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SecondaryPhoto
         fields = '__all__'
 
 class ContactFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactForm
         fields = '__all__'
+
+class BlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = '__all__'
+
+
 

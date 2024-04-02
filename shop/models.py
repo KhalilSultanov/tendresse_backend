@@ -11,9 +11,10 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     description_full = models.TextField(null=True, blank=True)
     reviews = models.ManyToManyField('Review', blank=True)
-    photos = models.ManyToManyField('Photo', blank=True)
+    main_photo = models.ManyToManyField('MainPhoto', blank=True)
+    secondary_photo = models.ManyToManyField('SecondaryPhoto', blank=True)
     categories = models.ManyToManyField('Category', blank=True)
-    sale = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    sale = models.FloatField(default=0.0, null=True, blank=True)
     new = models.BooleanField(default=False)
     popular = models.BooleanField(default=False)
     is_waiting = models.BooleanField(default=False)
@@ -56,8 +57,14 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.name} - {self.text[:50]}"
 
-class Photo(models.Model):
-    image = models.ImageField(upload_to='static')
+class MainPhoto(models.Model):
+    image = models.ImageField(upload_to='static/products_photos/main_photos', blank=True, null=True)
+
+    def __str__(self):
+        return self.image.name
+
+class SecondaryPhoto(models.Model):
+    image = models.ImageField(upload_to='static/products_photos/secondary_photos', blank=True, null=True)
 
     def __str__(self):
         return self.image.name
@@ -73,3 +80,8 @@ class ContactForm(models.Model):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     email = models.EmailField(max_length=1000, blank=True, null=True)
     message = models.CharField(max_length=2000)
+
+class Blog(models.Model):
+    name = models.CharField(max_length=1000)
+    description = models.TextField(max_length=10000)
+    photo = models.ImageField(upload_to='static/blog_photos')

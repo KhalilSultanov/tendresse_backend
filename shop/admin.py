@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Product, Manufacturer, Color, Size, Characteristic, Review, Photo, Category, ContactForm
+from .models import Product, Manufacturer, Color, Size, Characteristic, Review, MainPhoto, Category, ContactForm, Blog, SecondaryPhoto
+from decimal import Decimal
+
 
 class CharacteristicInline(admin.TabularInline):
     model = Characteristic
@@ -10,8 +12,14 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'price', 'quantity', 'new', 'popular', 'is_waiting')
     list_filter = ('new', 'popular', 'manufacturer', 'colors', 'sizes', 'categories')
     search_fields = ('name', 'full_name', 'description_full')
-    filter_horizontal = ('colors', 'sizes', 'reviews', 'categories', 'manufacturer', 'photos')
+    filter_horizontal = ('colors', 'sizes', 'reviews', 'categories', 'manufacturer', 'main_photo', 'secondary_photo')
     inlines = [CharacteristicInline]
+
+    def save_model(self, request, obj, form, change):
+        if obj.price is not None:
+            obj.price = obj.price - (obj.price * Decimal(obj.sale) / Decimal(100.0))
+        super().save_model(request, obj, form, change)
+
 
 @admin.register(Manufacturer)
 class ManufacturerAdmin(admin.ModelAdmin):
@@ -38,7 +46,12 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = ('id', 'text', 'name', 'email', 'rating')
     search_fields = ('text', 'name', 'email')
 
-@admin.register(Photo)
+@admin.register(MainPhoto)
+class MainPhotoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'image',)
+    search_fields = ('image',)
+
+@admin.register(SecondaryPhoto)
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('id', 'image',)
     search_fields = ('image',)
@@ -52,3 +65,8 @@ class CategoryAdmin(admin.ModelAdmin):
 class ContactFormAdmin(admin.ModelAdmin):
     list_display = ('id', 'fullname', 'phone_number', 'email', 'message')
     search_fields = ('fullname', 'phone_number', 'email', 'message')
+
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'description')
+    search_fields = ('name', 'description')
