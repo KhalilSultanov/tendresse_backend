@@ -1,25 +1,17 @@
 from django.contrib import admin
-from .models import Product, Manufacturer, Color, Size, Characteristic, Review, MainPhoto, Category, ContactForm, Blog, \
-    SecondaryPhoto, BlogCharacteristic, MainBlogPhoto, SecondaryBlogPhoto
+from .models import Product, Manufacturer, Color, Size, Review, MainPhoto, Category, ContactForm, Blog, \
+    SecondaryPhoto, MainBlogPhoto, SecondaryBlogPhoto
 from decimal import Decimal
 
 
-class CharacteristicInline(admin.TabularInline):
-    model = Characteristic
-    extra = 1
-
-class BlogCharacteristicInline(admin.TabularInline):
-    model = BlogCharacteristic
-    extra = 1
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price', 'quantity', 'new', 'popular', 'is_waiting')
+    list_display = ('id', 'name', 'price', 'quantity', 'new', 'popular')
     list_filter = ('new', 'popular', 'manufacturer', 'colors', 'sizes', 'categories')
     search_fields = ('name', 'full_name', 'description_full')
     filter_horizontal = ('colors', 'sizes', 'reviews', 'categories', 'manufacturer', 'main_photo', 'secondary_photo')
-    inlines = [CharacteristicInline]
 
     def save_model(self, request, obj, form, change):
         if obj.price is not None:
@@ -40,11 +32,6 @@ class ColorAdmin(admin.ModelAdmin):
 @admin.register(Size)
 class SizeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
-    search_fields = ('name',)
-
-@admin.register(Characteristic)
-class CharacteristicsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
     search_fields = ('name',)
 
 @admin.register(Review)
@@ -77,8 +64,6 @@ class BlogAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'description', 'created_at_display')
     search_fields = ('name', 'description', 'created_at')
     filter_horizontal = ('main_photo', 'secondary_photo')
-
-    inlines = [BlogCharacteristicInline]
 
     @staticmethod
     def created_at_display(obj):

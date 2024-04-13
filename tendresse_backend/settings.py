@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shop',
     'corsheaders',
+    'ckeditor',
     'rest_framework',
     'django_filters',
 ]
@@ -55,6 +56,16 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'width': '100%',  # Ширина редактора
+        'height': 300,  # Высота редактора
+        'toolbar': 'full',  # Тип панели инструментов (может быть 'Basic' или 'Full')
+        'toolbarCanCollapse': False,  # Запретить сворачивание панели инструментов
+    },
+}
 
 ROOT_URLCONF = 'tendresse_backend.urls'
 
@@ -118,6 +129,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)

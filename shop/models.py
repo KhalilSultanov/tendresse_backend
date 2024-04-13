@@ -1,4 +1,6 @@
 from django.db import models
+from ckeditor.fields import RichTextField
+
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -9,7 +11,7 @@ class Product(models.Model):
     colors = models.ManyToManyField('Color', blank=True)
     sizes = models.ManyToManyField('Size', blank=True)
     quantity = models.PositiveIntegerField(default=0)
-    description_full = models.TextField(null=True, blank=True)
+    description_full = RichTextField(default='')
     reviews = models.ManyToManyField('Review', blank=True)
     main_photo = models.ManyToManyField('MainPhoto', blank=True)
     secondary_photo = models.ManyToManyField('SecondaryPhoto', blank=True)
@@ -17,7 +19,6 @@ class Product(models.Model):
     sale = models.FloatField(default=0.0, null=True, blank=True)
     new = models.BooleanField(default=False)
     popular = models.BooleanField(default=False)
-    is_waiting = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -30,6 +31,7 @@ class Manufacturer(models.Model):
 
 class Color(models.Model):
     name = models.CharField(max_length=100)
+    hex_color = models.CharField(max_length=50, default='')
 
     def __str__(self):
         return self.name
@@ -39,14 +41,6 @@ class Size(models.Model):
 
     def __str__(self):
         return self.name
-
-class Characteristic(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='characteristics')
-    name = models.CharField(max_length=255)
-    value = models.TextField()
-
-    def __str__(self):
-        return f"{self.name}: {self.value}"
 
 class Review(models.Model):
     name = models.CharField(max_length=255, default="Anonymous")
@@ -96,18 +90,11 @@ class SecondaryBlogPhoto(models.Model):
 
 
 class Blog(models.Model):
-    name = models.CharField(max_length=1000)
-    description = models.TextField(max_length=10000)
+    name = RichTextField(default='')
+    description = RichTextField(default='')
     main_photo = models.ManyToManyField('MainBlogPhoto', blank=True)
     secondary_photo = models.ManyToManyField('SecondaryBlogPhoto', blank=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
-class BlogCharacteristic(models.Model):
-    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='characteristics')
-    name = models.CharField(max_length=255)
-    value = models.TextField()
-
     def __str__(self):
-        return f"{self.name}: {self.value}"
-
-
+        return self.name

@@ -1,17 +1,18 @@
 import os
 
-from django.db.models import Q
+from django.db.models import Q, Func
+from django.db.models.functions import Lower
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .filter import ProductFilter
-from .models import Product, Category, Blog
-from .serializer import ProductSerializer, CategorySerializer, MainPhotoSerializer, ContactFormSerializer, BlogSerializer, SecondaryPhotoSerializer, MainPhotoBlogSerializer, SecondaryPhotoBlogSerializer
+from .models import Product, Category, Blog, Review, Color
+from .serializer import ProductSerializer, CategorySerializer, ContactFormSerializer, BlogSerializer, \
+    MainPhotoBlogSerializer, SecondaryPhotoBlogSerializer, ReviewSerializer, ColorSerializer
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-
 
 
 @api_view(['GET'])
@@ -27,19 +28,16 @@ def search_products(request):
             Q(name__contains=query) |
             Q(full_name__contains=query) |
             Q(article__contains=query) |
-            Q(description_full__contains=query)
+            Q(description_full__contains=query) |
+            Q(name__icontains=Func(Lower('name'), function='LOWER', template='%(expressions)s')) |
+            Q(full_name__icontains=Func(Lower('full_name'), function='LOWER', template='%(expressions)s')) |
+            Q(article__icontains=Func(Lower('article'), function='LOWER', template='%(expressions)s')) |
+            Q(description_full__icontains=Func(Lower('description_full'), function='LOWER', template='%(expressions)s'))
         ).distinct()
-
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     else:
         return Response([])
-
-@api_view(['GET'])
-def all_products(request):
-    products = Product.objects.all()
-    serializer = ProductSerializer(products, many=True)
-    return Response(serializer.data)
 
 @api_view(['GET'])
 def product_by_id(request, id):
@@ -140,3 +138,15 @@ def blog_photos(request, blog_id):
     secondary_serializer = SecondaryPhotoBlogSerializer(secondary_photos, many=True, context={'request': request})
 
     return Response({'main_photo': main_serializer.data, 'secondary_photos': secondary_serializer.data})
+
+@api_view(['GET'])
+def review_list(request):
+    reviews = Review.objects.all()
+    serializer = ReviewSerializer(reviews, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def color_list(request):
+    colors = Color.objects.all()
+    serializer = ColorSerializer(colors, many=True)
+    return Response(serializer.data)

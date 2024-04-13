@@ -1,18 +1,13 @@
 from rest_framework import serializers
-from .models import (Product, MainPhoto, Category, Review, Characteristic, ContactForm, Manufacturer, Blog,
+from .models import (Product, MainPhoto, Category, Review, ContactForm, Manufacturer, Blog,
                      SecondaryPhoto,
-                     MainBlogPhoto, SecondaryBlogPhoto, BlogCharacteristic)
+                     MainBlogPhoto, SecondaryBlogPhoto, Color)
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['name', 'email', 'rating', 'text']
-
-class CharacteristicSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Characteristic
-        fields = ['name', 'value']
+        fields = ['id', 'name', 'email', 'rating', 'text']
 
 class ManufacturerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,9 +22,7 @@ class ProductSerializer(serializers.ModelSerializer):
     colors = serializers.SerializerMethodField()
     sizes = serializers.SerializerMethodField()
     reviews = serializers.SerializerMethodField()
-    characteristics = serializers.SerializerMethodField()
     manufacturer = serializers.SerializerMethodField()
-
 
     class Meta:
         model = Product
@@ -45,11 +38,11 @@ class ProductSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_categories(obj):
-        return [category.name for category in obj.categories.all()]
+        return [{'id': category.id} for category in obj.categories.all()]
 
     @staticmethod
     def get_colors(obj):
-        return [color.name for color in obj.colors.all()]
+        return [{'id': color.id, 'name': color.name, 'hex_color': color.hex_color} for color in obj.colors.all()]
 
     @staticmethod
     def get_sizes(obj):
@@ -57,11 +50,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_reviews(obj):
-        return ReviewSerializer(obj.reviews.all(), many=True).data
-
-    @staticmethod
-    def get_characteristics(obj):
-        return CharacteristicSerializer(obj.characteristics.all(), many=True).data
+        return [{'id': review.id} for review in obj.reviews.all()]
 
     @staticmethod
     def get_manufacturer(obj):
@@ -70,6 +59,17 @@ class ProductSerializer(serializers.ModelSerializer):
             return manufacturer_instance.name
         return None
 
+class ColorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Color
+        fields = '__all__'
+
+    @staticmethod
+    def get_manufacturer(obj):
+        manufacturer_instance = obj.manufacturer.first()
+        if manufacturer_instance:
+            return manufacturer_instance.name
+        return None
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -89,15 +89,6 @@ class ContactFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactForm
         fields = '__all__'
-
-    @staticmethod
-    def get_characteristics(obj):
-        return BlogCharacteristicSerializer(obj.characteristics.all(), many=True).data
-
-class BlogCharacteristicSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BlogCharacteristic
-        fields = ['name', 'value']
 
 class MainPhotoBlogSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
@@ -127,7 +118,7 @@ class BlogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ['id', 'created_at', 'characteristics', 'name', 'description', 'main_photo', 'secondary_photo']
+        fields = ['id', 'created_at', 'name', 'description', 'main_photo', 'secondary_photo']
 
     @staticmethod
     def get_main_photo(obj):
@@ -136,11 +127,3 @@ class BlogSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_secondary_photo(obj):
         return [photo.image.url for photo in obj.secondary_photo.all()]
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        characteristics = BlogCharacteristic.objects.filter(blog_id=instance.id).values('name', 'value')
-        data['characteristics'] = list(characteristics)
-        return data
-
-
