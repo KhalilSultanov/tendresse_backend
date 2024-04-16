@@ -71,9 +71,15 @@ class ColorSerializer(serializers.ModelSerializer):
             return manufacturer_instance.name
         return None
 class CategorySerializer(serializers.ModelSerializer):
+    preview_photo = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
         fields = '__all__'
+
+    @staticmethod
+    def get_preview_photo(obj):
+        return obj.preview_photo.url if obj.preview_photo else None
 
 class MainPhotoSerializer(serializers.ModelSerializer):
     class Meta:

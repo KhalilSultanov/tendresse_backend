@@ -8,9 +8,9 @@ from decimal import Decimal
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price', 'quantity', 'new', 'popular')
+    list_display = ('id', 'name', 'price', 'quantity', 'details', 'new', 'popular')
     list_filter = ('new', 'popular', 'manufacturer', 'colors', 'sizes', 'categories')
-    search_fields = ('name', 'full_name', 'description_full')
+    search_fields = ('name', 'full_name', 'details', 'description_full')
     filter_horizontal = ('colors', 'sizes', 'reviews', 'categories', 'manufacturer', 'main_photo', 'secondary_photo')
 
     def save_model(self, request, obj, form, change):
@@ -51,7 +51,7 @@ class SecondaryPhotoAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
+    list_display = ('id', 'name', 'preview_photo')
     search_fields = ('name',)
 
 @admin.register(ContactForm)

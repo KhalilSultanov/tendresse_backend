@@ -7,6 +7,7 @@ class Product(models.Model):
     full_name = models.CharField(max_length=512, null=True, blank=True)
     article = models.CharField(max_length=100, null=True, blank=True)
     manufacturer = models.ManyToManyField('Manufacturer', blank=True)
+    details = models.TextField(max_length=100, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     colors = models.ManyToManyField('Color', blank=True)
     sizes = models.ManyToManyField('Size', blank=True)
@@ -65,6 +66,7 @@ class SecondaryPhoto(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
+    preview_photo = models.ImageField(upload_to='static/category_photos', blank=True, null=True)
 
     def __str__(self):
         return self.name
