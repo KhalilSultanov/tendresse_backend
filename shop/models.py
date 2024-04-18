@@ -12,7 +12,9 @@ class Product(models.Model):
     colors = models.ManyToManyField('Color', blank=True)
     sizes = models.ManyToManyField('Size', blank=True)
     quantity = models.PositiveIntegerField(default=0)
-    description_full = RichTextField(default='')
+   #description_full = RichTextField(default='')
+    content1 = RichTextField(default='')
+    content2 = RichTextField(default='')
     reviews = models.ManyToManyField('Review', blank=True)
     main_photo = models.ManyToManyField('MainPhoto', blank=True)
     secondary_photo = models.ManyToManyField('SecondaryPhoto', blank=True)
@@ -92,11 +94,13 @@ class SecondaryBlogPhoto(models.Model):
 
 
 class Blog(models.Model):
-    name = RichTextField(default='')
-    description = RichTextField(default='')
-    main_photo = models.ManyToManyField('MainBlogPhoto', blank=True)
-    secondary_photo = models.ManyToManyField('SecondaryBlogPhoto', blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    name = models.TextField(max_length=30)
+    description = models.TextField(max_length=50)
+    content1 = RichTextField(default='')
+    content2 = RichTextField(default='')
+    main_photo = models.ManyToManyField('MainBlogPhoto')
+    secondary_photo = models.ManyToManyField('SecondaryBlogPhoto')
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

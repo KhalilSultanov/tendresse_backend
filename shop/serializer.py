@@ -121,6 +121,7 @@ class SecondaryPhotoBlogSerializer(serializers.ModelSerializer):
 class BlogSerializer(serializers.ModelSerializer):
     main_photo = serializers.SerializerMethodField()
     secondary_photo = serializers.SerializerMethodField()
+    created_at = serializers.DateTimeField(format="%Y-%m-%d")
 
     class Meta:
         model = Blog

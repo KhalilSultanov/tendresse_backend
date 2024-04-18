@@ -18,26 +18,20 @@ import json
 @api_view(['GET'])
 def search_products(request):
     query = request.query_params.get('q', '')
-
     if query:
         products = Product.objects.filter(
             Q(name__icontains=query) |
             Q(full_name__icontains=query) |
             Q(article__icontains=query) |
-            Q(description_full__icontains=query) |
-            Q(name__contains=query) |
-            Q(full_name__contains=query) |
-            Q(article__contains=query) |
-            Q(description_full__contains=query) |
-            Q(name__icontains=Func(Lower('name'), function='LOWER', template='%(expressions)s')) |
-            Q(full_name__icontains=Func(Lower('full_name'), function='LOWER', template='%(expressions)s')) |
-            Q(article__icontains=Func(Lower('article'), function='LOWER', template='%(expressions)s')) |
-            Q(description_full__icontains=Func(Lower('description_full'), function='LOWER', template='%(expressions)s'))
+            Q(content1__icontains=query) |
+            Q(content2__icontains=query)
         ).distinct()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     else:
         return Response([])
+
+
 
 @api_view(['GET'])
 def product_by_id(request, id):
@@ -49,11 +43,13 @@ def product_by_id(request, id):
     serializer = ProductSerializer(product)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def all_categories(request):
     categories = Category.objects.all()
     serializer = CategorySerializer(categories, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def product_photos(request, product_id):
@@ -74,6 +70,8 @@ def product_photos(request, product_id):
     }
 
     return Response(response_data)
+
+
 @csrf_exempt
 def contact_form_view(request):
     print(request.body)
@@ -124,6 +122,7 @@ def get_blogs(request):
     serializer = BlogSerializer(blogs, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
 def blog_photos(request, blog_id):
     try:
@@ -139,11 +138,13 @@ def blog_photos(request, blog_id):
 
     return Response({'main_photo': main_serializer.data, 'secondary_photos': secondary_serializer.data})
 
+
 @api_view(['GET'])
 def review_list(request):
     reviews = Review.objects.all()
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def color_list(request):

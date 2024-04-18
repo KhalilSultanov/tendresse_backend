@@ -10,7 +10,7 @@ from decimal import Decimal
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'price', 'quantity', 'details', 'new', 'popular')
     list_filter = ('new', 'popular', 'manufacturer', 'colors', 'sizes', 'categories')
-    search_fields = ('name', 'full_name', 'details', 'description_full')
+    search_fields = ('name', 'full_name', 'details', 'content1', 'content2')
     filter_horizontal = ('colors', 'sizes', 'reviews', 'categories', 'manufacturer', 'main_photo', 'secondary_photo')
 
     def save_model(self, request, obj, form, change):
