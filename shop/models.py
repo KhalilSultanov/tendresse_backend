@@ -94,8 +94,8 @@ class SecondaryBlogPhoto(models.Model):
 
 
 class Blog(models.Model):
-    name = models.TextField(max_length=30)
-    description = models.TextField(max_length=50)
+    name = models.TextField(max_length=50)
+    description = models.TextField(max_length=100)
     content1 = RichTextField(default='')
     content2 = RichTextField(default='')
     main_photo = models.ManyToManyField('MainBlogPhoto')
