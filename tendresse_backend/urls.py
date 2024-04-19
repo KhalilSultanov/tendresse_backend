@@ -22,18 +22,18 @@ from shop.views import search_products, product_by_id, all_categories, product_p
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('search/', search_products, name='search'),
-    path('product_by_id/<int:id>/', product_by_id, name='product_by_id'),
-    path('all_categories/', all_categories, name='all_categories'),
-    path('product/<int:product_id>/photos/', product_photos, name='product_photos'),
-    path('submit_contact_form/', contact_form_view, name='contact_form_view'),
-    path('products/', ProductList.as_view(), name='product-list'),
-    path('blogs', get_blogs, name='get_blogs'),
-    path('blog/<int:blog_id>/photos/', blog_photos, name='get_blogs'),
-    path('reviews/', review_list, name='review_list'),
-    path('colors/', color_list, name='color_list'),
-    path('sizes/', size_list, name='size_list'),
-    path('manufacturers/', manufacturer_list, name='manufacturer_list'),
+    path('api/search/', search_products, name='search'),
+    path('api/product_by_id/<int:id>/', product_by_id, name='product_by_id'),
+    path('api/all_categories/', all_categories, name='all_categories'),
+    path('api/product/<int:product_id>/photos/', product_photos, name='product_photos'),
+    path('api/submit_contact_form/', contact_form_view, name='contact_form_view'),
+    path('api/products/', ProductList.as_view(), name='product-list'),
+    path('api/blogs', get_blogs, name='get_blogs'),
+    path('api/blog/<int:blog_id>/photos/', blog_photos, name='get_blogs'),
+    path('api/reviews/', review_list, name='review_list'),
+    path('api/colors/', color_list, name='color_list'),
+    path('api/sizes/', size_list, name='size_list'),
+    path('api/manufacturers/', manufacturer_list, name='manufacturer_list'),
 
 
 
