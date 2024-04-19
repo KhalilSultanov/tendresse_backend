@@ -7,9 +7,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .filter import ProductFilter
-from .models import Product, Category, Blog, Review, Color
+from .models import Product, Category, Blog, Review, Color, Size, Manufacturer
 from .serializer import ProductSerializer, CategorySerializer, ContactFormSerializer, BlogSerializer, \
-    MainPhotoBlogSerializer, SecondaryPhotoBlogSerializer, ReviewSerializer, ColorSerializer
+    MainPhotoBlogSerializer, SecondaryPhotoBlogSerializer, ReviewSerializer, ColorSerializer, ManufacturerSerializer, \
+    SizeSerializer
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -23,8 +24,15 @@ def search_products(request):
             Q(name__icontains=query) |
             Q(full_name__icontains=query) |
             Q(article__icontains=query) |
-            Q(content1__icontains=query) |
-            Q(content2__icontains=query)
+            Q(description_full__icontains=query) |
+            Q(name__contains=query) |
+            Q(full_name__contains=query) |
+            Q(article__contains=query) |
+            Q(description_full__contains=query) |
+            Q(name__icontains=Func(Lower('name'), function='LOWER', template='%(expressions)s')) |
+            Q(full_name__icontains=Func(Lower('full_name'), function='LOWER', template='%(expressions)s')) |
+            Q(article__icontains=Func(Lower('article'), function='LOWER', template='%(expressions)s')) |
+            Q(description_full__icontains=Func(Lower('description_full'), function='LOWER', template='%(expressions)s'))
         ).distinct()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
@@ -150,4 +158,17 @@ def review_list(request):
 def color_list(request):
     colors = Color.objects.all()
     serializer = ColorSerializer(colors, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def size_list(request):
+    sizes = Size.objects.all()
+    serializer = SizeSerializer(sizes, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def manufacturer_list(request):
+    manufacturer = Manufacturer.objects.all()
+    serializer = ManufacturerSerializer(manufacturer, many=True)
     return Response(serializer.data)

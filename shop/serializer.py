@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (Product, MainPhoto, Category, Review, ContactForm, Manufacturer, Blog,
                      SecondaryPhoto,
-                     MainBlogPhoto, SecondaryBlogPhoto, Color)
+                     MainBlogPhoto, SecondaryBlogPhoto, Color, Size)
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -12,7 +12,13 @@ class ReviewSerializer(serializers.ModelSerializer):
 class ManufacturerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Manufacturer
-        fields = ['name']
+        fields = ['id', 'name']
+
+
+class SizeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Size
+        fields = ['id', 'name']
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -134,3 +140,5 @@ class BlogSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_secondary_photo(obj):
         return [photo.image.url for photo in obj.secondary_photo.all()]
+
+
