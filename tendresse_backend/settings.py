@@ -133,12 +133,12 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = '/gstatic/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'gstatic/blog_photos'),
-    os.path.join(BASE_DIR, 'gstatic/category_photos'),
-    os.path.join(BASE_DIR, 'gstatic/products_photos'),
+    os.path.join(BASE_DIR, 'static/blog_photos'),
+    os.path.join(BASE_DIR, 'static/category_photos'),
+    os.path.join(BASE_DIR, 'static/products_photos'),
     # ... другие папки с статическими файлами, если они есть ...
 ]
 
