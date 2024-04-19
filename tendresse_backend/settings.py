@@ -142,7 +142,7 @@ STATICFILES_DIRS = [
     # ... другие папки с статическими файлами, если они есть ...
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
