@@ -20,6 +20,7 @@ from django.contrib import admin
 
 from shop.views import search_products, product_by_id, all_categories, product_photos, contact_form_view, \
     ProductList, get_blogs, blog_photos, review_list, color_list, size_list, manufacturer_list
+from tendresse_backend import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,9 +36,8 @@ urlpatterns = [
     path('api/colors/', color_list, name='color_list'),
     path('api/sizes/', size_list, name='size_list'),
     path('api/manufacturers/', manufacturer_list, name='manufacturer_list'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
-
-]
 
 
