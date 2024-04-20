@@ -53,20 +53,20 @@ class Review(models.Model):
         return f"{self.name} - {self.text[:50]}"
 
 class MainPhoto(models.Model):
-    image = models.ImageField(upload_to='gstatic/products_photos/main_photo', blank=True, null=True)
+    image = models.ImageField(upload_to='media/products_photos/main_photo', blank=True, null=True)
 
     def __str__(self):
         return self.image.name
 
 class SecondaryPhoto(models.Model):
-    image = models.ImageField(upload_to='gstatic/products_photos/secondary_photos', blank=True, null=True)
+    image = models.ImageField(upload_to='media/products_photos/secondary_photos', blank=True, null=True)
 
     def __str__(self):
         return self.image.name
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    preview_photo = models.ImageField(upload_to='gstatic/category_photos', blank=True, null=True)
+    preview_photo = models.ImageField(upload_to='media/category_photos', blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -79,13 +79,13 @@ class ContactForm(models.Model):
 
 
 class MainBlogPhoto(models.Model):
-    image = models.ImageField(upload_to='gstatic/blog_photos/main_photo/', blank=True, null=True)
+    image = models.ImageField(upload_to='media/blog_photos/main_photo/', blank=True, null=True)
 
     def __str__(self):
         return self.image.name
 
 class SecondaryBlogPhoto(models.Model):
-    image = models.ImageField(upload_to='gstatic/blog_photos/secondary_photos/', blank=True, null=True)
+    image = models.ImageField(upload_to='media/blog_photos/secondary_photos/', blank=True, null=True)
 
     def __str__(self):
         return self.image.name
