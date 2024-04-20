@@ -36,7 +36,7 @@ urlpatterns = [
     path('api/colors/', color_list, name='color_list'),
     path('api/sizes/', size_list, name='size_list'),
     path('api/manufacturers/', manufacturer_list, name='manufacturer_list'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
 
 
 
