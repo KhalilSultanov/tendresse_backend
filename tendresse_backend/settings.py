@@ -133,17 +133,11 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = '/gstatic/'
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'gstatic/'),
-    # ... другие папки с статическими файлами, если они есть ...
-]
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-
-MEDIA_URL = '/media/'  # Базовый URL для обслуживания медиа файлов
-MEDIA_ROOT = os.path.join(BASE_DIR, 'gstatic')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # папка backend/static должна быть создана
+MEDIA_ROOT = os.path.join(BASE_DIR, 'gstatic')  # папка backend/gstatic должна быть создана
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
