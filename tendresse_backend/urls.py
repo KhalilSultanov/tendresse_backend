@@ -17,12 +17,13 @@ Including another URLconf
 from django.urls import path
 from django.contrib import admin
 
-from shop.views import search_products, product_by_id, all_categories, product_photos, contact_form_view, \
+from shop.views import search_products,search_products_title_en, product_by_id, all_categories, product_photos, contact_form_view, \
     ProductList, get_blogs, blog_photos, review_list, color_list, size_list, manufacturer_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/search/', search_products, name='search'),
+    path('api/search_title_en/', search_products_title_en, name='search_title_en'),
     path('api/product_by_id/<int:id>/', product_by_id, name='product_by_id'),
     path('api/all_categories/', all_categories, name='all_categories'),
     path('api/product/<int:product_id>/photos/', product_photos, name='product_photos'),

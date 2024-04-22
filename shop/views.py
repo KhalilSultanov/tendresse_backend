@@ -5,6 +5,7 @@ from django.db.models.functions import Lower
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .filter import ProductFilter
 from .models import Product, Category, Blog, Review, Color, Size, Manufacturer
@@ -33,6 +34,19 @@ def search_products(request):
             Q(full_name__icontains=Func(Lower('full_name'), function='LOWER', template='%(expressions)s')) |
             Q(article__icontains=Func(Lower('article'), function='LOWER', template='%(expressions)s')) |
             Q(description_full__icontains=Func(Lower('description_full'), function='LOWER', template='%(expressions)s'))
+        ).distinct()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+    else:
+        return Response([])
+
+@api_view(['GET'])
+def search_products_title_en(request):
+    query = request.query_params.get('q', '')
+    if query:
+        products = Product.objects.filter(
+            Q(title_en__icontains=query) |
+            Q(title_en__contains=query)
         ).distinct()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
@@ -95,34 +109,20 @@ def contact_form_view(request):
     else:
         return JsonResponse({'success': False, 'message': 'Only POST requests are allowed.'}, status=405)
 
-
 class ProductList(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend]
     filterset_class = ProductFilter
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        category_name = self.request.query_params.get('category_name')
 
-        min_price = self.request.query_params.get('min_price')
-        max_price = self.request.query_params.get('max_price')
-        manufacturer_id = self.request.query_params.get('manufacturer_id')
-        color_id = self.request.query_params.get('color_id')
-        size_id = self.request.query_params.get('size_id')
-
-        if min_price is not None:
-            queryset = queryset.filter(price__gte=min_price)
-        if max_price is not None:
-            queryset = queryset.filter(price__lte=max_price)
-        if manufacturer_id is not None:
-            queryset = queryset.filter(manufacturer__id=manufacturer_id)
-        if color_id is not None:
-            queryset = queryset.filter(colors__id=color_id)
-        if size_id is not None:
-            queryset = queryset.filter(sizes__id=size_id)
+        if category_name:
+            queryset = queryset.filter(categories__name__icontains=category_name)
 
         return queryset
-
 
 @api_view(['GET'])
 def get_blogs(request):
