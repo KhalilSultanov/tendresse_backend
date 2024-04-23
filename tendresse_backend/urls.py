@@ -14,11 +14,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
 from django.urls import path
 from django.contrib import admin
 
 from shop.views import search_products,search_products_title_en, product_by_id, all_categories, product_photos, contact_form_view, \
     ProductList, get_blogs, blog_photos, review_list, color_list, size_list, manufacturer_list
+from tendresse_backend import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,5 +40,5 @@ urlpatterns = [
 
 
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
