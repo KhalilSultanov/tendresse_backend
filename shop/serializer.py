@@ -131,7 +131,7 @@ class BlogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ['id', 'created_at', 'name', 'description', 'content1', 'content2', 'main_photo', 'secondary_photo']
+        fields = ['id', 'created_at', 'name', 'title_en', 'description', 'content1', 'content2', 'main_photo', 'secondary_photo']
 
     @staticmethod
     def get_main_photo(obj):
