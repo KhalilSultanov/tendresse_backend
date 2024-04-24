@@ -54,6 +54,31 @@ def search_products_title_en(request):
         return Response([])
 
 
+@api_view(['GET'])
+def categories_by_id(request, id):
+    try:
+        category = Category.objects.get(pk=id)
+        products = category.product_set.all()
+        data = [{'id': product.id, 'name': product.name} for product in products]
+        return Response(data)
+    except Category.DoesNotExist:
+        return Response({'message': 'Категория не найдена'}, status=404)
+
+
+@api_view(['GET'])
+def search_blogs_title_en(request):
+    query = request.query_params.get('q', '')
+    if query:
+        blogs = Blog.objects.filter(
+            Q(title_en__icontains=query) |
+            Q(title_en__contains=query)
+        ).distinct()
+        serializer = BlogSerializer(blogs, many=True)
+        return Response(serializer.data)
+    else:
+        return Response([])
+
+
 
 @api_view(['GET'])
 def product_by_id(request, id):
@@ -130,6 +155,16 @@ def get_blogs(request):
     serializer = BlogSerializer(blogs, many=True)
     return Response(serializer.data)
 
+
+@api_view(['GET'])
+def get_blog_by_id(request, id):
+    try:
+        blog = Blog.objects.get(pk=id)
+    except Blog.DoesNotExist:
+        return Response(status=404)
+
+    serializer = BlogSerializer(blog)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def blog_photos(request, blog_id):

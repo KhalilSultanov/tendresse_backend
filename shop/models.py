@@ -93,6 +93,7 @@ class SecondaryBlogPhoto(models.Model):
 
 class Blog(models.Model):
     name = models.TextField(max_length=50)
+    title_en = models.CharField(max_length=355, blank=True, default='')
     description = models.TextField(max_length=100)
     content1 = RichTextField(default='')
     content2 = RichTextField(default='')
