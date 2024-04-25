@@ -22,18 +22,7 @@ def search_products(request):
     query = request.query_params.get('q', '')
     if query:
         products = Product.objects.filter(
-            Q(name__icontains=query) |
-            Q(full_name__icontains=query) |
-            Q(article__icontains=query) |
-            Q(description_full__icontains=query) |
-            Q(name__contains=query) |
-            Q(full_name__contains=query) |
-            Q(article__contains=query) |
-            Q(description_full__contains=query) |
-            Q(name__icontains=Func(Lower('name'), function='LOWER', template='%(expressions)s')) |
-            Q(full_name__icontains=Func(Lower('full_name'), function='LOWER', template='%(expressions)s')) |
-            Q(article__icontains=Func(Lower('article'), function='LOWER', template='%(expressions)s')) |
-            Q(description_full__icontains=Func(Lower('description_full'), function='LOWER', template='%(expressions)s'))
+            Q(name__icontains=query)
         ).distinct()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
