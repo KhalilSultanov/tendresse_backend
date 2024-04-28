@@ -6,11 +6,12 @@ from shop.views import search_products, search_products_title_en, search_blogs_t
     product_photos, \
     contact_form_view, \
     ProductList, get_blogs, blog_photos, review_list, color_list, size_list, manufacturer_list, get_blog_by_id, \
-    categories_by_id
+    categories_by_id, purchase_view
 from tendresse_backend import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/create_order/', purchase_view, name='purchase'),
     path('api/search/', search_products, name='search'),
     path('api/search_products_title_en/', search_products_title_en, name='search_products_title_en'),
     path('api/search_blogs_title_en/', search_blogs_title_en, name='search_blogs_title_en'),

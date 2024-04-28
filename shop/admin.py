@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Product, Manufacturer, Color, Size, Review, MainPhoto, Category, ContactForm, Blog, \
-    SecondaryPhoto, MainBlogPhoto, SecondaryBlogPhoto
+    SecondaryPhoto, MainBlogPhoto, SecondaryBlogPhoto, Purchase, PurchaseQuantity
 from decimal import Decimal
 
 
@@ -58,7 +58,6 @@ class CategoryAdmin(admin.ModelAdmin):
 class ContactFormAdmin(admin.ModelAdmin):
     list_display = ('id', 'fullname', 'phone_number', 'email', 'message')
     search_fields = ('fullname', 'phone_number', 'email', 'message')
-
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'description', 'created_at_display')
@@ -79,3 +78,13 @@ class MainBlogPhotoAdmin(admin.ModelAdmin):
     list_display = ('id', 'image',)
     search_fields = ('image',)
 
+class PurchaseQuantityInline(admin.TabularInline):
+    model = PurchaseQuantity
+    extra = 0
+
+class PurchaseAdmin(admin.ModelAdmin):
+    list_display = ('fullname', 'phone_number', 'message', 'email')
+    inlines = [PurchaseQuantityInline]
+
+
+admin.site.register(Purchase, PurchaseAdmin)

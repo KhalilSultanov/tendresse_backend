@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (Product, MainPhoto, Category, Review, ContactForm, Manufacturer, Blog,
                      SecondaryPhoto,
-                     MainBlogPhoto, SecondaryBlogPhoto, Color, Size)
+                     MainBlogPhoto, SecondaryBlogPhoto, Color, Size, PurchaseQuantity)
 
 
 class ReviewSerializer(serializers.ModelSerializer):

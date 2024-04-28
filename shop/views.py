@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .filter import ProductFilter
-from .models import Product, Category, Blog, Review, Color, Size, Manufacturer
+from .models import Product, Category, Blog, Review, Color, Size, Manufacturer, Purchase, PurchaseQuantity
 from .serializer import ProductSerializer, CategorySerializer, ContactFormSerializer, BlogSerializer, \
     MainPhotoBlogSerializer, SecondaryPhotoBlogSerializer, ReviewSerializer, ColorSerializer, ManufacturerSerializer, \
     SizeSerializer
@@ -196,3 +196,26 @@ def manufacturer_list(request):
     manufacturer = Manufacturer.objects.all()
     serializer = ManufacturerSerializer(manufacturer, many=True)
     return Response(serializer.data)
+
+@csrf_exempt
+def purchase_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+
+        purchase = Purchase.objects.create(
+            fullname=data.get('fullname', ''),
+            phone_number=data.get('phone_number', ''),
+            message=data.get('message', ''),
+            email=data.get('email', '')
+        )
+
+        for product_id, quantity in data.get('products', {}).items():
+            product = Product.objects.get(pk=product_id)
+            purchase_quantity = PurchaseQuantity.objects.create(product=product, quantity=quantity)
+            purchase.products.add(purchase_quantity)
+            products_data = [{'id': item.product.id, 'name': item.product.title_en, 'quantity': item.quantity} for item
+                             in purchase.products.all()]
+
+        return JsonResponse({'message': 'Purchase created successfully', 'products': products_data})
+    else:
+        return JsonResponse({'message': 'Invalid request method'})

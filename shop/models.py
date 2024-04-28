@@ -71,6 +71,19 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+class Purchase(models.Model):
+    fullname = models.CharField(max_length=1000)
+    phone_number = models.CharField(max_length=30, blank=True)
+    message = models.CharField(max_length=2000)
+    email = models.CharField(max_length=2000, blank=True)
+
+class PurchaseQuantity(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    purchase = models.ForeignKey(Purchase, related_name='purchase_quantities', on_delete=models.CASCADE, default='')
+
+
+
 class ContactForm(models.Model):
     fullname = models.CharField(max_length=1000)
     phone_number = models.CharField(max_length=20, blank=True)
@@ -103,3 +116,5 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.name
+
+
