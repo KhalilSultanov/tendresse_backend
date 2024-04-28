@@ -75,7 +75,7 @@ class Purchase(models.Model):
     fullname = models.CharField(max_length=1000)
     phone_number = models.CharField(max_length=30, blank=True)
     message = models.CharField(max_length=2000)
-    email = models.CharField(max_length=2000, blank=True)
+    address = models.CharField(max_length=2000, blank=True)
 
 class PurchaseQuantity(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

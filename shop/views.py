@@ -206,15 +206,21 @@ def purchase_view(request):
             fullname=data.get('fullname', ''),
             phone_number=data.get('phone_number', ''),
             message=data.get('message', ''),
-            email=data.get('email', '')
+            address=data.get('address', '')
         )
-
+        products_data = []
         for product_id, quantity in data.get('products', {}).items():
             product = Product.objects.get(pk=product_id)
-            purchase_quantity = PurchaseQuantity.objects.create(product=product, quantity=quantity)
-            purchase.products.add(purchase_quantity)
-            products_data = [{'id': item.product.id, 'name': item.product.title_en, 'quantity': item.quantity} for item
-                             in purchase.products.all()]
+            purchase_quantity = PurchaseQuantity.objects.create(
+                product=product,
+                quantity=quantity,
+                purchase=purchase
+            )
+            products_data.append({
+                'id': product.id,
+                'name': product.title_en,
+                'quantity': quantity
+            })
 
         return JsonResponse({'message': 'Purchase created successfully', 'products': products_data})
     else:

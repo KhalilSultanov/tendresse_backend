@@ -83,7 +83,7 @@ class PurchaseQuantityInline(admin.TabularInline):
     extra = 0
 
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ('fullname', 'phone_number', 'message', 'email')
+    list_display = ('fullname', 'phone_number', 'message', 'address')
     inlines = [PurchaseQuantityInline]
 
 
