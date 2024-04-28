@@ -62,6 +62,7 @@ CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moono',
         # 'skin': 'office2013',
+        'contentsCss': ['/ckcustom/custom.css'],
         'toolbar_Basic': [
             ['Source', '-', 'Bold', 'Italic']
         ],

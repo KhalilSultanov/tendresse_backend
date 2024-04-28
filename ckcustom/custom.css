@@ -1,0 +1,5 @@
+hr {
+    border-bottom: 1px solid #cbd5e1; /* Это цвет border-gray-400 в Tailwind */
+    margin-left: 1rem; /* Это аналогично классу mx-4 в Tailwind, значение может отличаться в зависимости от вашего дизайна */
+    margin-right: 1rem; /* Это аналогично классу mx-4 в Tailwind */
+}
